@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Calculate your alarm</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+	
+	<input type="button" value="Home" onclick="returnHome()"/>
+	<h1 id="calcH1">Please enter when you would like to wake up</h1>
+	<div id="timePicker">
+	
+	<select id="hr" name=hourOpt size=1>
+		<option value="00">00 <option value="01">01
+		<option value="02">02
+		<option value="03">03
+
+		<option value="04">04
+		<option value="05">05
+		<option value="06">06
+		<option value="07">07
+
+		<option value="08">08
+		<option value="09">09
+		<option value="10">10
+		<option value="11">11
+
+		<option selected value="12">12
+
+		<option value="13">13
+		<option value="14">14
+		<option value="15">15
+		<option value="16">16
+
+		<option value="17">17
+		<option value="18">18
+		<option value="19">19
+		<option value="20">20
+
+		<option value="21">21
+		<option value="22">22
+		<option value="23">23
+</option>
+</select>
+<select id="min" name=minOpt size=1>
+<option selected value="00">00
+		<option value="01">01
+		<option value="02">02
+		<option value="03">03
+
+		<option value="04">04
+		<option value="05">05
+		<option value="06">06
+		<option value="07">07
+
+		<option value="08">08
+		<option value="09">09
+		<option value="10">10
+		<option value="11">11
+
+		<option value="12">12
+		<option value="13">13
+		<option value="14">14
+		<option value="15">15
+
+		<option value="16">16
+		<option value="17">17
+		<option value="18">18
+		<option value="19">19
+
+		<option value="20">20
+		<option value="21">21
+		<option value="22">22
+		<option value="23">23
+
+		<option value="24">24
+		<option value="25">25
+		<option value="26">26
+		<option value="27">27
+
+		<option value="28">28
+		<option value="29">29
+		<option value="30">30
+		<option value="31">31
+
+		<option value="32">32
+		<option value="33">33
+		<option value="34">34
+		<option value="35">35
+
+		<option value="36">36
+		<option value="37">37
+		<option value="38">38
+		<option value="39">39
+
+		<option value="40">40
+		<option value="41">41
+		<option value="42">42
+		<option value="43">43
+
+		<option value="44">44
+		<option value="45">45
+		<option value="46">46
+		<option value="47">47
+
+		<option value="48">48
+		<option value="49">49
+		<option value="50">50
+		<option value="51">51
+
+		<option value="52">52
+		<option value="53">53
+		<option value="54">54
+		<option value="55">55
+
+		<option value="56">56
+		<option value="57">57
+		<option value="58">58
+		<option value="59">59
+</option>
+</select>
+
+
+<input type="button" value="calculate"
+				onclick="calculate()" />
+</div>
+	<div id="sleepTimes">
+    
+    </div>
+    
+	
+	<script>
+	function returnHome(){
+		location.href="index.html";
+	}
+	
+	function navToAlarm(value){
+		var timeString = value;
+		var wakeString = document.getElementById("hr").value + ":" + document.getElementById("min").value
+		sessionStorage.setItem("wakeString",wakeString);
+		sessionStorage.setItem("timeString", timeString);
+		location.href = "alarm.html";
+	}	
+	
+		function calculate() {
+			var hour = document.getElementById("hr");
+			var selectHr = hour.options[hour.selectedIndex].value;
+			var minute = document.getElementById("min");
+			var selectMin = minute.options[minute.selectedIndex].value;
+			var amPm = '';
+			var startHr = selectHr - 9;
+			var startMin = selectMin - 15;
+			
+
+			
+			var text = '<h4 id="timeText"> Based on your given time you should go to bed at one of the following times: <h4> <div id="timesToPick">';
+			for(var i =0; i<6;i++){
+				
+				if(startMin < 0){
+					startHr -= 1;
+					startMin += 60;
+				}
+				if(startMin > 60){
+					startHr += 1;
+					startMin -= 60;
+				}
+				
+				if(startHr < 0){
+					startHr += 23;
+					
+				}
+				
+				if(startHr > 23){
+					startHr -= 23;
+				}
+				if (startHr < 12){
+					amPm = "AM";
+				}
+				else if(startHr >12){
+					amPm = "PM";
+				}
+				
+				if(i < 2){
+					text += "<input type='button' value='"+ startHr + ":" + startMin + " " + amPm+"' id='goodTime' onclick='navToAlarm(this.value)'>" + "<br><br>";
+				}
+				else if(i < 4){
+					text += "<input type='button' value='"+ startHr + ":" + startMin + " " + amPm+"' id='okTime' onclick='navToAlarm(this.value)'>" + "<br><br>";
+				}
+				else{
+					text += "<input type='button' value='"+ startHr + ":" + startMin + " " + amPm+"' id='badTime' onclick='navToAlarm(this.value)'>" + "<br><br>";
+				}
+				
+				startHr += 1;
+				startMin += 30;
+			}
+			text += "</div>";
+			document.getElementById("sleepTimes").innerHTML = text;
+
+			
+			
+			
+		}
+	</script>
+
+		</body>
+</html>

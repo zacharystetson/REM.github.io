@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Home page</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+
+</head>
+<body>
+	
+	<img id="zzz" src="moon.png" alt="moon"> 
+	<h1 id="mainPageh1">Welcome to REM sleep clock </h1>
+	
+	
+	<div id="mainNav">
+	<button type="button" id="navToAlarm" onclick="navTo('alarm')">Set REM alarm</button><br><br>
+	<button type="button" id="navToTips" onclick="navTo('tips')">View healthy sleep tips</button><br><br>
+	</div>
+	<script>
+	
+		function navTo(element){
+			if (element == "alarm"){
+				location.href = "setAlarm.html";
+			}
+			else
+				location.href ="tips.html";
+		}
+	
+	</script>
+
+</body>
+</html>
