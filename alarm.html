@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Alarm</title>
+<link rel="stylesheet" type="text/css" href="styles.css">
+
+<script>
+var timeString = sessionStorage.getItem("timeString");
+var timeSplit = timeString.split(":");
+var stringHour = parseInt(timeSplit[0]);
+var stringMinute = parseInt(timeSplit[1]);
+var hourNotify;
+var minuteNotify;
+var secondNotify = 0;
+
+var wakeString = sessionStorage.getItem("wakeString");
+var wakeSplit = wakeString.split(":");
+var wakeStringHour = parseInt(wakeSplit[0]);
+var wakeStringMinute = parseInt(wakeSplit[1]);
+var wakeHour;
+var wakeMinute;
+var wakeSec;
+
+	
+	var jsalarm = {
+			
+		padfield : function(f) {
+			return (f < 10) ? "0" + f : f
+		},
+		showcurrenttime : function() {
+			var dateobj = new Date()
+			var ct = this.padfield(dateobj.getHours()) + ":"
+					+ this.padfield(dateobj.getMinutes()) + ":"
+					+ this.padfield(dateobj.getSeconds())
+			this.ctref.innerHTML = ct
+			this.ctref.setAttribute("title", ct)
+			if (typeof this.hourwake != "undefined") { //if alarm is set
+				if (this.ctref.title == (this.hourwake + ":" + this.minutewake
+						+ ":" + this.secondwake)) {
+					clearInterval(jsalarm.timer)
+					window.location = document.getElementById("musicloc").value
+				}
+			}
+			if(typeof this.hourNotify !="undefined"){
+				if(this.ctref.title == (this.hourNotify+":"+this.minuteNotify +":"+this.secondNotify)){
+					alert("Its "+ this.hourNotify + ":" + this.minuteNotify + " Time to go to sleep!");
+				}
+			}
+			
+		},
+		
+
+		init : function() {
+			var dateobj = new Date()
+			this.ctref = document.getElementById("jsalarm_ct")
+			this.submitref = document.getElementById("submitbutton")
+			this.submitref.onclick = function() {
+				jsalarm.setalarm()
+				this.value = "Alarm Set"
+				this.disabled = true
+				return false
+			}
+			this.resetref = document.getElementById("resetbutton")
+			this.resetref.onclick = function() {
+				jsalarm.submitref.disabled = false
+				jsalarm.hourwake = undefined
+				jsalarm.hourNotify = undefined
+				jsalarm.hourselect.disabled = false
+				jsalarm.minuteselect.disabled = false
+				jsalarm.secondselect.disabled = false
+				jsalarm.hNotify.disabled = false
+				jsalarm.mNotify.disabled = false
+				jsalarm.sNotify.disabled = false
+				
+				return false
+			}
+			
+
+			
+			var selections = document.getElementsByTagName("select")
+			this.hourselect = selections[0]
+			this.minuteselect = selections[1]
+			this.secondselect = selections[2]
+			this.hNotify = selections[3]
+			this.mNotify = selections[4]
+			this.sNotify = selections[5]
+			for (var i = 0; i < 60; i++) {
+				if (i < 24){ //If still within range of hours field: 0-23
+					if(i == wakeStringHour)
+						this.hourselect[i] = new Option(this.padfield(i), this.padfield(i), false, true)
+					else
+						this.hourselect[i] = new Option(this.padfield(i), this.padfield(i), false, false)
+				
+					if(i == stringHour)
+						this.hNotify[i] = new Option(this.padfield(i), this.padfield(i), false, true)
+					else
+						this.hNotify[i] = new Option(this.padfield(i), this.padfield(i), false, false)
+				}
+				
+				if(i ==  wakeStringMinute)
+					this.minuteselect[i] = new Option(this.padfield(i), this.padfield(i), false, true)
+				else
+					this.minuteselect[i] = new Option(this.padfield(i), this.padfield(i), false, false)
+				
+				if(i == 0)
+					this.secondselect[i] = new Option(this.padfield(i), this.padfield(i), false, true)
+				else
+					this.secondselect[i] = new Option(this.padfield(i), this.padfield(i), false, false)
+				
+				if(i == stringMinute)
+					this.mNotify[i] = new Option(this.padfield(i), this.padfield(i), false, true)
+				else
+					this.mNotify[i] = new Option(this.padfield(i), this.padfield(i), false, false)
+				
+				if(i == 0)
+					this.sNotify[i] = new Option(this.padfield(i), this.padfield(i), false, true)
+				else
+					this.sNotify[i] = new Option(this.padfield(i), this.padfield(i), false, false)
+				
+				
+
+			}
+			jsalarm.showcurrenttime()
+			jsalarm.timer = setInterval(function() {
+				jsalarm.showcurrenttime()
+			}, 1000)
+		},
+		setalarm : function() {
+			this.hourwake = this.hourselect.options[this.hourselect.selectedIndex].value
+			this.minutewake = this.minuteselect.options[this.minuteselect.selectedIndex].value
+			this.secondwake = this.secondselect.options[this.secondselect.selectedIndex].value
+			this.hourselect.disabled = true
+			this.minuteselect.disabled = true
+			this.secondselect.disabled = true
+			this.hourNotify = this.hNotify.options[this.hNotify.selectedIndex].value
+			this.minuteNotify = this.mNotify.options[this.mNotify.selectedIndex].value
+			this.secondNotify = this.sNotify.options[this.sNotify.selectedIndex].value
+			this.hNotify.disabled = true
+			this.mNotify.disabled = true
+			this.sNotify.disabled = true
+		}
+	}
+	
+	
+</script>
+</head>
+<body>
+<input type="button" value="Home" onclick="returnHome()"/>
+	<form action="" method="">
+		<div id="jsalarmclock">
+			<div>
+				Current Time<br>
+				<span id="jsalarm_ct" style="letter-spacing: 2px"></span>
+			</div>
+			<div>
+				Set Alarm<br>
+				<span><select id="hours"></select> Hour</span> <span><select></select>
+					Minutes</span> <span><select></select> Seconds</span>
+			</div>
+			<div>
+				Set Sleep Reminder<br>
+				<span><select id="hours"></select> Hour</span> <span><select></select>
+					Minutes</span> <span><select></select> Seconds</span>
+			</div>
+			<div>
+				Set Alarm Reference<br>
+				<input type="text" id="musicloc" size="35"
+					value="https://www.youtube.com/watch?v=1U9htUTOZsw" /> <span
+					style="font: normal 11px Tahoma"><br> (Copy and paste any video link)</span>
+			</div>
+			<input type="submit" value="Set Alarm!" id="submitbutton" /> <input
+				type="reset" value="reset" id="resetbutton" />
+		</div>
+	</form>
+
+
+	<script>
+		jsalarm.init()
+		
+		function returnHome(){
+		location.href="index.html";
+	}
+
+	</script>
+
+
+</body>
+</html>
